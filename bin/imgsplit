@@ -19,12 +19,13 @@ null or zero bytes.
 
 Usage:
     imgsplit (--version|--help)
-    imgsplit [--bs BS] [--minskip MINSKIP] <image> [<outpattern>]
+    imgsplit [--bs BS] [--minskip MINSKIP] <image> [--targetdir targetdir] [<outpattern>]
 
 Arguments:
     --bs BS            Block size in bytes. Segments are aligned to this size. [default: 512]
     --minskip MINSKIP  Minimum number of zero blocks to skip. [default: 1024]
     <image>            Image file to split.
+    --targetdir targetdir The folder to write the image segments to. Will be ignored if outpattern is specified. [default: cwd]
     <outpattern>       Pattern for naming the segment files. Will be expanded with the segment offset. E.g `image_%08x.img`.
 
 Example:
@@ -106,7 +107,7 @@ if __name__ == "__main__":
     minskip   = int(args.get('--minskip'))
     image     = args.get('<image>')
     outpat    = args.get('<outpattern>')
-    targetdir = os.getcwd()
+    targetdir = args.get('--targetdir') or os.getcwd()
 
     if outpat:
         outpat = os.path.join(targetdir,outpat)
