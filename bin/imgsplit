@@ -91,9 +91,10 @@ def main(image, outpat, bs=512, minskip=1024):
         out.close()
         out = None
 
-def out_pattern_for(image):
-    base, ext = os.path.splitext(image)
-    return ''.join([base, '_0x%08x', ext])
+def out_pattern_for(image,targetdir):
+    filename=os.path.basename(image)
+    base, ext = os.path.splitext(filename)
+    return os.path.join(targetdir,''.join([base, '_0x%08x', ext]))
 
 if __name__ == "__main__":
     args = docopt.docopt(
@@ -101,9 +102,15 @@ if __name__ == "__main__":
         version="version "+__version__
     )
 
-    bs      = int(args.get('--bs'))
-    minskip = int(args.get('--minskip'))
-    image   = args.get('<image>')
-    outpat  = args.get('<outpattern>') or out_pattern_for(image)
+    bs        = int(args.get('--bs'))
+    minskip   = int(args.get('--minskip'))
+    image     = args.get('<image>')
+    outpat    = args.get('<outpattern>')
+    targetdir = os.getcwd()
+
+    if outpat:
+        outpat = os.path.join(targetdir,outpat)
+    else:
+        outpat = out_pattern_for(image,targetdir)
 
     main(image, outpat, bs=bs, minskip=minskip)
